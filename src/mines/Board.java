@@ -91,43 +91,30 @@ public class Board extends JPanel {
 
     private void incrementAdjacentCells(int position) {
         int currentCol = position % cols;
-        if (currentCol > 0) {
-            int cell = position - 1 - cols;
-            if (cell >= 0 && field[cell] != COVERED_MINE_CELL) {
-                field[cell]++;
-            }
-            cell = position - 1;
-            if (cell >= 0 && field[cell] != COVERED_MINE_CELL) {
-                field[cell]++;
-            }
-            cell = position + cols - 1;
-            if (cell < allCells && field[cell] != COVERED_MINE_CELL) {
-                field[cell]++;
-            }
-        }
-        int cell = position - cols;
-        if (cell >= 0 && field[cell] != COVERED_MINE_CELL) {
-            field[cell]++;
-        }
-        cell = position + cols;
-        if (cell < allCells && field[cell] != COVERED_MINE_CELL) {
-            field[cell]++;
-        }
+
+        incrementCellIfValid(position - 1 - cols);
+        incrementCellIfValid(position - 1);
+        incrementCellIfValid(position + cols - 1);
+        incrementCellIfValid(position - cols);
+        incrementCellIfValid(position + cols);
+
         if (currentCol < (cols - 1)) {
-            cell = position - cols + 1;
-            if (cell >= 0 && field[cell] != COVERED_MINE_CELL) {
-                field[cell]++;
-            }
-            cell = position + cols + 1;
-            if (cell < allCells && field[cell] != COVERED_MINE_CELL) {
-                field[cell]++;
-            }
-            cell = position + 1;
-            if (cell < allCells && field[cell] != COVERED_MINE_CELL) {
-                field[cell]++;
-            }
+            incrementCellIfValid(position - cols + 1);
+            incrementCellIfValid(position + cols + 1);
+            incrementCellIfValid(position + 1);
         }
     }
+
+    private void incrementCellIfValid(int cell) {
+        if (isValidCell(cell) && field[cell] != COVERED_MINE_CELL) {
+            field[cell]++;
+        }
+    }
+
+    private boolean isValidCell(int cell) {
+        return cell >= 0 && cell < allCells;
+    }
+
 
 
     public void find_empty_cells(int j) {
