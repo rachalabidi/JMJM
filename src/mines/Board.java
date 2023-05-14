@@ -147,52 +147,47 @@ public class Board extends JPanel {
 
     @Override
     public void paint(Graphics g) {
-
-        int cell = 0;
         int uncover = 0;
-
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
+                int cell = field[(i * cols) + j];
 
-                cell = field[(i * cols) + j];
-
-                if (inGame && cell == MINE_CELL)
+                if (inGame && cell == MINE_CELL) {
                     inGame = false;
-
-                if (!inGame) {
-                    if (cell == COVERED_MINE_CELL) {
-                        cell = DRAW_MINE;
-                    } else if (cell == MARKED_MINE_CELL) {
-                        cell = DRAW_MARK;
-                    } else if (cell > COVERED_MINE_CELL) {
-                        cell = DRAW_WRONG_MARK;
-                    } else if (cell > MINE_CELL) {
-                        cell = DRAW_COVER;
-                    }
-
-
-                } else {
-                    if (cell > COVERED_MINE_CELL)
-                        cell = DRAW_MARK;
-                    else if (cell > MINE_CELL) {
-                        cell = DRAW_COVER;
-                        uncover++;
-                    }
                 }
 
-                g.drawImage(img[cell], (j * CELL_SIZE),
-                    (i * CELL_SIZE), this);
+                switch (cell) {
+                    case COVERED_MINE_CELL:
+                        cell = (!inGame) ? DRAW_MINE : DRAW_COVER;
+                        break;
+                    case MARKED_MINE_CELL:
+                        cell = DRAW_MARK;
+                        break;
+                    default:
+                        if (!inGame && cell > COVERED_MINE_CELL) {
+                            cell = DRAW_WRONG_MARK;
+                        } else if (cell > COVERED_MINE_CELL) {
+                            cell = DRAW_MARK;
+                        } else if (cell > MINE_CELL) {
+                            cell = DRAW_COVER;
+                            uncover++;
+                        }
+                        break;
+                }
+
+                g.drawImage(img[cell], (j * CELL_SIZE), (i * CELL_SIZE), this);
             }
         }
-
 
         if (uncover == 0 && inGame) {
             inGame = false;
             statusbar.setText("Game won");
-        } else if (!inGame)
+        } else if (!inGame) {
             statusbar.setText("Game lost");
+        }
     }
+
 
 
     class MinesAdapter extends MouseAdapter {
