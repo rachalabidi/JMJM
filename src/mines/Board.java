@@ -148,38 +148,46 @@ public class Board extends JPanel {
     @Override
     public void paint(Graphics g) {
         int uncover = 0;
-
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 int cell = field[(i * cols) + j];
-
                 if (inGame && cell == MINE_CELL) {
                     inGame = false;
                 }
-
-                switch (cell) {
-                    case COVERED_MINE_CELL:
-                        cell = (!inGame) ? DRAW_MINE : DRAW_COVER;
-                        break;
-                    case MARKED_MINE_CELL:
-                        cell = DRAW_MARK;
-                        break;
-                    default:
-                        if (!inGame && cell > COVERED_MINE_CELL) {
-                            cell = DRAW_WRONG_MARK;
-                        } else if (cell > COVERED_MINE_CELL) {
-                            cell = DRAW_MARK;
-                        } else if (cell > MINE_CELL) {
-                            cell = DRAW_COVER;
-                            uncover++;
-                        }
-                        break;
-                }
-
+                cell = getCellDrawing(cell);
                 g.drawImage(img[cell], (j * CELL_SIZE), (i * CELL_SIZE), this);
+                uncover = updateUncoverCount(uncover, cell);
             }
         }
+        updateGameStatus(uncover);
+    }
 
+    private int getCellDrawing(int cell) {
+        switch (cell) {
+            case COVERED_MINE_CELL:
+                return (!inGame) ? DRAW_MINE : DRAW_COVER;
+            case MARKED_MINE_CELL:
+                return DRAW_MARK;
+            default:
+                if (!inGame && cell > COVERED_MINE_CELL) {
+                    return DRAW_WRONG_MARK;
+                } else if (cell > COVERED_MINE_CELL) {
+                    return DRAW_MARK;
+                } else if (cell > MINE_CELL) {
+                    return DRAW_COVER;
+                }
+                return cell;
+        }
+    }
+
+    private int updateUncoverCount(int uncover, int cell) {
+        if (cell > MINE_CELL) {
+            return uncover + 1;
+        }
+        return uncover;
+    }
+
+    private void updateGameStatus(int uncover) {
         if (uncover == 0 && inGame) {
             inGame = false;
             statusbar.setText("Game won");
