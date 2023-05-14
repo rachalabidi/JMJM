@@ -214,6 +214,7 @@ public class Board extends JPanel {
 
     }
 
+    @Override
     public void paint(Graphics g) {
 
         int cell = 0;
@@ -264,6 +265,8 @@ public class Board extends JPanel {
 
 
     class MinesAdapter extends MouseAdapter {
+
+        @Override
         public void mousePressed(MouseEvent e) {
 
             int x = e.getX();
