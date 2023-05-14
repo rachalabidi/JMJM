@@ -2,8 +2,7 @@ package mines;
 
 import java.awt.BorderLayout;
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
+import javax.swing.*;
 
 // Source: http://zetcode.com/tutorials/javagamestutorial/minesweeper/
 
@@ -17,7 +16,7 @@ public class Mines extends JFrame {
     
     public Mines() {
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setSize(WIDTH, HEIGHT);
         setLocationRelativeTo(null);
         setTitle("Minesweeper");
