@@ -61,79 +61,70 @@ public class Board extends JPanel {
 
 
     public void newGame() {
+        initializeGame();
+        deployMines();
+    }
 
-        SecureRandom random = new SecureRandom();
-        int current_col;
-
-        int i = 0;
-        int position = 0;
-        int cell = 0;
-
-
+    private void initializeGame() {
         inGame = true;
         minesLeft = mines;
-
         allCells = rows * cols;
         field = new int[allCells];
-        
-        for (i = 0; i < allCells; i++)
+        for (int i = 0; i < allCells; i++) {
             field[i] = COVER_FOR_CELL;
-
+        }
         statusbar.setText(Integer.toString(minesLeft));
+    }
 
+    private void deployMines() {
 
-        i = 0;
-        while (i < mines) {
-
-            position = (int) (allCells * random.nextDouble());
-
-            if ((position < allCells) &&
-                (field[position] != COVERED_MINE_CELL)) {
-
-
-                current_col = position % cols;
+        int minesDeployed = 0;
+        while (minesDeployed < mines) {
+            int position = (int) (allCells * random.nextDouble());
+            if ((position < allCells) && (field[position] != COVERED_MINE_CELL)) {
                 field[position] = COVERED_MINE_CELL;
-                i++;
+                minesDeployed++;
+                incrementAdjacentCells(position);
+            }
+        }
+    }
 
-                if (current_col > 0) { 
-                    cell = position - 1 - cols;
-                    if (cell >= 0)
-                        if (field[cell] != COVERED_MINE_CELL)
-                            field[cell] += 1;
-                    cell = position - 1;
-                    if (cell >= 0)
-                        if (field[cell] != COVERED_MINE_CELL)
-                            field[cell] += 1;
-
-                    cell = position + cols - 1;
-                    if (cell < allCells)
-                        if (field[cell] != COVERED_MINE_CELL)
-                            field[cell] += 1;
-                }
-
-                cell = position - cols;
-                if (cell >= 0)
-                    if (field[cell] != COVERED_MINE_CELL)
-                        field[cell] += 1;
-                cell = position + cols;
-                if (cell < allCells)
-                    if (field[cell] != COVERED_MINE_CELL)
-                        field[cell] += 1;
-
-                if (current_col < (cols - 1)) {
-                    cell = position - cols + 1;
-                    if (cell >= 0)
-                        if (field[cell] != COVERED_MINE_CELL)
-                            field[cell] += 1;
-                    cell = position + cols + 1;
-                    if (cell < allCells)
-                        if (field[cell] != COVERED_MINE_CELL)
-                            field[cell] += 1;
-                    cell = position + 1;
-                    if (cell < allCells)
-                        if (field[cell] != COVERED_MINE_CELL)
-                            field[cell] += 1;
-                }
+    private void incrementAdjacentCells(int position) {
+        int currentCol = position % cols;
+        if (currentCol > 0) {
+            int cell = position - 1 - cols;
+            if (cell >= 0 && field[cell] != COVERED_MINE_CELL) {
+                field[cell]++;
+            }
+            cell = position - 1;
+            if (cell >= 0 && field[cell] != COVERED_MINE_CELL) {
+                field[cell]++;
+            }
+            cell = position + cols - 1;
+            if (cell < allCells && field[cell] != COVERED_MINE_CELL) {
+                field[cell]++;
+            }
+        }
+        int cell = position - cols;
+        if (cell >= 0 && field[cell] != COVERED_MINE_CELL) {
+            field[cell]++;
+        }
+        cell = position + cols;
+        if (cell < allCells && field[cell] != COVERED_MINE_CELL) {
+            field[cell]++;
+        }
+        if (currentCol < (cols - 1)) {
+            cell = position - cols + 1;
+            if (cell >= 0 && field[cell] != COVERED_MINE_CELL) {
+                field[cell]++;
+            }
+            cell = position + cols + 1;
+            if (cell < allCells && field[cell] != COVERED_MINE_CELL) {
+                field[cell]++;
+            }
+            cell = position + 1;
+            if (cell < allCells && field[cell] != COVERED_MINE_CELL) {
+                field[cell]++;
             }
         }
     }
