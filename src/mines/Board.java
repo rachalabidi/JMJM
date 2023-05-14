@@ -117,80 +117,33 @@ public class Board extends JPanel {
 
 
 
-    public void find_empty_cells(int j) {
+    public void findEmptyCells(int j) {
+        int currentCol = j % cols;
 
-        int current_col = j % cols;
-        int cell;
+        mergeIfValid(j - cols - 1);
+        mergeIfValid(j - 1);
+        mergeIfValid(j + cols - 1);
+        mergeIfValid(j - cols);
+        mergeIfValid(j + cols);
 
-        if (current_col > 0) { 
-            cell = j - cols - 1;
-            if (cell >= 0)
-                if (field[cell] > MINE_CELL) {
-                    field[cell] -= COVER_FOR_CELL;
-                    if (field[cell] == EMPTY_CELL)
-                        find_empty_cells(cell);
-                }
-
-            cell = j - 1;
-            if (cell >= 0)
-                if (field[cell] > MINE_CELL) {
-                    field[cell] -= COVER_FOR_CELL;
-                    if (field[cell] == EMPTY_CELL)
-                        find_empty_cells(cell);
-                }
-
-            cell = j + cols - 1;
-            if (cell < allCells)
-                if (field[cell] > MINE_CELL) {
-                    field[cell] -= COVER_FOR_CELL;
-                    if (field[cell] == EMPTY_CELL)
-                        find_empty_cells(cell);
-                }
+        if (currentCol < (cols - 1)) {
+            mergeIfValid(j - cols + 1);
+            mergeIfValid(j + cols + 1);
+            mergeIfValid(j + 1);
         }
-
-        cell = j - cols;
-        if (cell >= 0)
-            if (field[cell] > MINE_CELL) {
-                field[cell] -= COVER_FOR_CELL;
-                if (field[cell] == EMPTY_CELL)
-                    find_empty_cells(cell);
-            }
-
-        cell = j + cols;
-        if (cell < allCells)
-            if (field[cell] > MINE_CELL) {
-                field[cell] -= COVER_FOR_CELL;
-                if (field[cell] == EMPTY_CELL)
-                    find_empty_cells(cell);
-            }
-
-        if (current_col < (cols - 1)) {
-            cell = j - cols + 1;
-            if (cell >= 0)
-                if (field[cell] > MINE_CELL) {
-                    field[cell] -= COVER_FOR_CELL;
-                    if (field[cell] == EMPTY_CELL)
-                        find_empty_cells(cell);
-                }
-
-            cell = j + cols + 1;
-            if (cell < allCells)
-                if (field[cell] > MINE_CELL) {
-                    field[cell] -= COVER_FOR_CELL;
-                    if (field[cell] == EMPTY_CELL)
-                        find_empty_cells(cell);
-                }
-
-            cell = j + 1;
-            if (cell < allCells)
-                if (field[cell] > MINE_CELL) {
-                    field[cell] -= COVER_FOR_CELL;
-                    if (field[cell] == EMPTY_CELL)
-                        find_empty_cells(cell);
-                }
-        }
-
     }
+
+    private void mergeIfValid(int cell) {
+        if (isValidCell(cell) && field[cell] > MINE_CELL) {
+            field[cell] -= COVER_FOR_CELL;
+            if (field[cell] == EMPTY_CELL) {
+                findEmptyCells(cell);
+            }
+        }
+    }
+
+
+
 
     @Override
     public void paint(Graphics g) {
@@ -299,7 +252,7 @@ public class Board extends JPanel {
                         if (field[(cRow * cols) + cCol] == MINE_CELL)
                             inGame = false;
                         if (field[(cRow * cols) + cCol] == EMPTY_CELL)
-                            find_empty_cells((cRow * cols) + cCol);
+                            findEmptyCells((cRow * cols) + cCol);
                     }
                 }
 
