@@ -4,7 +4,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Random;
+import java.security.SecureRandom;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -38,6 +38,7 @@ public class Board extends JPanel {
     private int cols = 16;
     private int allCells;
     private JLabel statusbar;
+    SecureRandom random = new SecureRandom();
 
 
     public Board(JLabel statusbar) {
@@ -61,14 +62,14 @@ public class Board extends JPanel {
 
     public void newGame() {
 
-        Random random;
+        SecureRandom random = new SecureRandom();
         int current_col;
 
         int i = 0;
         int position = 0;
         int cell = 0;
 
-        random = new Random();
+
         inGame = true;
         minesLeft = mines;
 
@@ -84,7 +85,7 @@ public class Board extends JPanel {
         i = 0;
         while (i < mines) {
 
-            position =  (allCells * random.nextInt());
+            position = (int) (allCells * random.nextDouble());
 
             if ((position < allCells) &&
                 (field[position] != COVERED_MINE_CELL)) {
